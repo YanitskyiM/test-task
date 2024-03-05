@@ -1,9 +1,9 @@
-import { imagesFormat } from "../constants/interactor";
-import { ApiFile } from "../services/api/types";
-import { InternalFileType } from "../types/interactor";
+import { imagesFormat } from "../../constants/interactor";
+import { ApiFile } from "../../services/api/types";
+import { InternalFileType } from "../../types/interactor";
 import { NextRouter } from "next/router";
 import React, { useEffect } from "react";
-import {getFileUrl} from "../utils/interactor/getFileUrl";
+import {getFileUrl} from "../../utils/interactor/getFileUrl";
 
 export const useLoadImageCover = (router: NextRouter, file: ApiFile) => {
   const [fileLink, setFileLink] = React.useState<string | null>(null);

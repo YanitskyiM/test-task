@@ -1,5 +1,9 @@
 import { LoadingAnimation } from "../../components/loading-animation";
 import { PrimaryButton } from "../../components/primary-button";
+import {
+  InternalFileType,
+  IPaymentPageInteractor,
+} from "../../types/interactor";
 import { PaymentPlanId } from "../../use-cases/get-subscription-products";
 import black_star from "./assets/black-star.svg";
 import fake_file from "./assets/fake-file.svg";
@@ -7,7 +11,6 @@ import green_check_b from "./assets/green-check-b.svg";
 import radio_off from "./assets/radio-off.svg";
 import radio_on from "./assets/radio-on.svg";
 import stars_doc_b from "./assets/stars_document-b.svg";
-import { IPaymentPageInteractor, InternalFileType } from "./interactor";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import Head from "next/head";
@@ -43,12 +46,12 @@ export const PaymentPageRouter: React.FC<IProps> = ({ interactor, header }) => {
     onContinue,
     selectedPlan,
     onSelectPlan,
-    onCommentsFlip,
     imagePDF,
     isImageLoading,
     fileLink,
     isSecondEmail,
     isThirdEmail,
+    plans,
   } = interactor;
 
   const isPDFFile = interactor.fileType === "PDF";
@@ -57,7 +60,6 @@ export const PaymentPageRouter: React.FC<IProps> = ({ interactor, header }) => {
     interactor.fileType === InternalFileType.JPG ||
     interactor.fileType === InternalFileType.PNG;
   const { t } = useTranslation();
-  const plans = interactor.getPlans(t);
   // const plan = plans.find((item) => item.id === interactor.selectedPlan)
 
   React.useEffect(() => {
@@ -105,6 +107,7 @@ export const PaymentPageRouter: React.FC<IProps> = ({ interactor, header }) => {
 
     return <Image src={fake_file} alt="fake_file" />;
   }, [imagePDF, isPDFFile, isImageLoading, isImage, fileLink]);
+
 
   return (
     <>
@@ -172,7 +175,7 @@ export const PaymentPageRouter: React.FC<IProps> = ({ interactor, header }) => {
                 </div>
               </div>
               <div className="max-w-[658px] w-full mobile:max-w-full">
-                {plans.map((plan, id) => (
+                {plans?.map((plan, id) => (
                   <div
                     key={id}
                     className={classNames(
@@ -264,7 +267,7 @@ export const PaymentPageRouter: React.FC<IProps> = ({ interactor, header }) => {
                     {renderImage()}
                   </div>
                 </div>
-                {plans.map((plan, id) => (
+                {plans?.map((plan, id) => (
                   <div key={id}>
                     {selectedPlan === plan.id && (
                       <>

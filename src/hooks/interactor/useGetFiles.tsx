@@ -1,5 +1,5 @@
-import { API } from "../services/api";
-import { ApiFile } from "../services/api/types";
+import { API } from "../../services/api";
+import { ApiFile } from "../../services/api/types";
 import { NextRouter } from "next/router";
 import React from "react";
 

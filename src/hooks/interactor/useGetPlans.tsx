@@ -1,7 +1,7 @@
-import check from "../modules/choose-plan-page/assets/check.svg";
-import cross from "../modules/choose-plan-page/assets/cross.svg";
-import { Plan } from "../types/interactor";
-import { getCurrency, getTrialFormattedPrice } from "../utils/interactor";
+import check from "../../modules/choose-plan-page/assets/check.svg";
+import cross from "../../modules/choose-plan-page/assets/cross.svg";
+import { Plan } from "../../types/interactor";
+import { getCurrency, getTrialFormattedPrice } from "../../utils/interactor";
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
 

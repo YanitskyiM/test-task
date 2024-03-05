@@ -1,5 +1,5 @@
-import { InternalFileType } from "../../../modules/choose-plan-page/interactor";
 import { ApiFile } from "../types";
+import {InternalFileType} from "../../../types/interactor";
 
 async function mockGetFiles(): Promise<GetFilesResponse> {
   const mockFile: ApiFile = {
