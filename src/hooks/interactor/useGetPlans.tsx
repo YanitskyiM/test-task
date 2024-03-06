@@ -1,7 +1,11 @@
 import check from "../../modules/choose-plan-page/assets/check.svg";
 import cross from "../../modules/choose-plan-page/assets/cross.svg";
 import { Plan } from "../../types/interactor";
-import { getCurrency, getTrialFormattedPrice } from "../../utils/interactor";
+import {
+  getAnnualFormattedPrice,
+  getCurrency,
+  getTrialFormattedPrice,
+} from "../../utils/interactor";
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
 
@@ -40,10 +44,15 @@ export const useGetPlans = (products) => {
     return plans.map(({ productIndex, planKey }) => {
       const product = products[productIndex];
       const isTrial = planKey.includes("monthly");
-      const price = getTrialFormattedPrice(
-        isTrial ? product?.price!.trial_price! : product?.price?.price!,
-        product?.price!.currency
-      );
+      const price = isTrial
+        ? getTrialFormattedPrice(
+            product?.price!.trial_price!,
+            product?.price!.currency
+          )
+        : getAnnualFormattedPrice(
+            product?.price?.price!,
+            product?.price!.currency
+          );
       const fullPrice = isTrial
         ? getTrialFormattedPrice(
             product?.price?.price,

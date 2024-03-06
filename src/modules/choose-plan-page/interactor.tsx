@@ -1,3 +1,7 @@
+import {
+  SELECTED_PLAN,
+  SELECTED_PLAN_VIEW,
+} from "../../constants/interactor/localStorage/analytics";
 import { useGetFiles } from "../../hooks/interactor/useGetFiles";
 import { useGetPlans } from "../../hooks/interactor/useGetPlans";
 import { useLoadImageCover } from "../../hooks/interactor/useLoadImageCover";
@@ -17,8 +21,6 @@ import React from "react";
 export const usePaymentPageInteractor = (): IPaymentPageInteractor => {
   const router = useRouter();
 
-  const { user } = useUser();
-
   const [selectedPlan, setSelectedPlan] = React.useState<PaymentPlanId>(
     PaymentPlanId.MONTHLY_FULL
   );
@@ -29,16 +31,17 @@ export const usePaymentPageInteractor = (): IPaymentPageInteractor => {
   const { products } = useGetSubscriptionProducts();
   const { plans } = useGetPlans(products);
   const { abTests, isRemoteConfigLoading } = useRemoteConfig();
+  const { user } = useUser();
 
-  const onSelectPlan = async (plan: PaymentPlanId) => {
+  const onSelectPlan = (plan: PaymentPlanId) => {
     setSelectedPlan(plan);
 
     if (selectedPlan === plan) {
-      await onContinue("planTab");
+      onContinue("planTab");
     }
   };
 
-  const onContinue = async (place?: string) => {
+  const onContinue = (place?: string) => {
     console.log(
       "send event analytic2",
       "place: ",
@@ -47,9 +50,9 @@ export const usePaymentPageInteractor = (): IPaymentPageInteractor => {
       selectedPlan
     );
 
-    localStorage.setItem("selectedPlan", selectedPlan);
+    localStorage.setItem(SELECTED_PLAN, selectedPlan);
 
-    await router.push({
+    router.push({
       pathname: PAGE_LINKS.PAYMENT,
       query: router.query,
     });
@@ -68,19 +71,18 @@ export const usePaymentPageInteractor = (): IPaymentPageInteractor => {
     if (router.query?.token) {
       API.auth.byEmailToken(router.query.token as string);
     }
-
   }, [user?.subscription, user?.email, router.query?.token]);
 
   // @NOTE: analytics on page rendered
   React.useEffect(() => {
-    if (!localStorage.getItem("select_plan_view")) {
+    if (!localStorage.getItem(SELECTED_PLAN_VIEW)) {
       console.log("send event analytic3");
     }
 
-    localStorage.setItem("select_plan_view", "true");
+    localStorage.setItem(SELECTED_PLAN_VIEW, "true");
 
     return () => {
-      localStorage.removeItem("select_plan_view");
+      localStorage.removeItem(SELECTED_PLAN_VIEW);
     };
   }, []);
 

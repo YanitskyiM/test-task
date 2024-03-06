@@ -1,37 +1,29 @@
 export const getTrialFormattedPrice = (price: number, currency: string) => {
-    if (currency === "USD") {
-        return `$${price / 100}`;
-    }
+  const priceFixed = (price / 100).toFixed(2);
+  const currencySymbol = getCurrency(currency);
 
-    if (currency === "GBP") {
-        return `£${price / 100}`;
-    }
-
-    return `€${price / 100}`;
+  return currencySymbol + priceFixed;
 };
 
 export const getAnnualFormattedPrice = (price: number, currency: string) => {
-    if (price === 19900) {
-        return `€${price / 100 / 12}`;
-    }
-    if (currency === "USD") {
-        return `$${price / 100 / 12}`;
-    }
+  const priceFixed = (price / 100 / 12).toFixed(2);
+  const currencySymbol = getCurrency(currency);
 
-    if (currency === "GBP") {
-        return `$${price / 100 / 12}`;
-    }
-    return `€${price / 100 / 12}`;
+  if (price === 19900) {
+    return `€${priceFixed}`;
+  }
+
+  return currencySymbol + priceFixed;
 };
 
 export const getCurrency = (currency: string) => {
-    if (currency === "USD") {
-        return "$";
-    }
+  if (currency === "USD") {
+    return "$";
+  }
 
-    if (currency === "GBP") {
-        return "£";
-    }
+  if (currency === "GBP") {
+    return "£";
+  }
 
-    return "€";
+  return "€";
 };
