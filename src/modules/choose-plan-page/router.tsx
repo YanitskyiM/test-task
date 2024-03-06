@@ -65,6 +65,7 @@ export const PaymentPageRouter: React.FC<IProps> = ({ interactor, header }) => {
   React.useEffect(() => {
     if (document.getElementsByClassName("swiper-wrapper")[0]) {
       // @ts-ignore
+      //todo do not manipulate dom directly
       document.getElementsByClassName("swiper-wrapper")[0].style.display =
         "flex";
     }
