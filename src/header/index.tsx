@@ -5,7 +5,7 @@ import { useTranslation } from "next-i18next";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import {PAGE_LINKS} from "../types/router";
+import {PAGE_LINKS} from "../modules/choose-plan-page/types/router";
 
 export const pathsForNewLayout = [
   "pdf_to_word",

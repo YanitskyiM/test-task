@@ -1,49 +1,41 @@
-import check from "../../modules/choose-plan-page/assets/check.svg";
-import cross from "../../modules/choose-plan-page/assets/cross.svg";
-import { Plan } from "../../types/interactor";
+import { Product } from "../../../use-cases/get-subscription-products";
+import check from "../assets/check.svg";
+import cross from "../assets/cross.svg";
+import { Plan, PlanKeys } from "../types/interactor";
 import {
+  currencyMap,
   getAnnualFormattedPrice,
-  getCurrency,
   getTrialFormattedPrice,
-} from "../../utils/interactor";
+} from "../utils/interactor";
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
 
 const CHECKED_MONTHLY_AMOUNT = 4;
 const BULLETS_AMOUNT = 8;
 
-export const useGetPlans = (products) => {
+const plansTypes = [
+  {
+    productIndex: 0,
+    planKey: PlanKeys.MONTHLY,
+  },
+  {
+    productIndex: 1,
+    planKey: PlanKeys.MONTHLY_FULL,
+  },
+  {
+    productIndex: 2,
+    planKey: PlanKeys.ANNUAL,
+  },
+];
+
+export const useGetPlans = (products: Product[]) => {
   const { t } = useTranslation();
   const [plans, setPlans] = useState<Plan[]>();
 
-  const createBulletPoint = (useCheckIcon: boolean, bulletText: string) => ({
-    imgSrc: useCheckIcon ? check : cross,
-    bullText: (
-      <span className={!useCheckIcon ? "text-[#878787]" : ""}>
-        {bulletText}
-      </span>
-    ),
-  });
-
-  const getPlans = (products): Plan[] => {
-    const plans = [
-      {
-        productIndex: 0,
-        planKey: "monthly",
-      },
-      {
-        productIndex: 1,
-        planKey: "monthly_full",
-      },
-      {
-        productIndex: 2,
-        planKey: "annual",
-      },
-    ];
-
-    return plans.map(({ productIndex, planKey }) => {
+  const getPlans = (products: Product[]): Plan[] => {
+    return plansTypes.map(({ productIndex, planKey }) => {
       const product = products[productIndex];
-      const isTrial = planKey.includes("monthly");
+      const isTrial = planKey.includes(PlanKeys.MONTHLY);
       const price = isTrial
         ? getTrialFormattedPrice(
             product?.price!.trial_price!,
@@ -59,14 +51,15 @@ export const useGetPlans = (products) => {
             product?.price?.currency
           )
         : undefined;
-      const formattedCurrency = getCurrency(product?.price.currency);
+
+      const formattedCurrency = currencyMap[product?.price.currency];
 
       const bullets = Array.from({ length: BULLETS_AMOUNT }, (_, i) => {
         const bulletNumber = i + 1;
         const useCheckIcon =
           bulletNumber < CHECKED_MONTHLY_AMOUNT ||
-          planKey === "annual" ||
-          planKey === "monthly_full";
+          planKey === PlanKeys.ANNUAL ||
+          planKey === PlanKeys.MONTHLY_FULL;
         return createBulletPoint(
           useCheckIcon,
           t(`payment_page.plans.${planKey}.bullet${bulletNumber}`)
@@ -79,7 +72,10 @@ export const useGetPlans = (products) => {
         price,
         fullPrice,
         formattedCurrency,
-        date: planKey === "annual" ? t("payment_page.plans.annual.date") : null,
+        date:
+          planKey === PlanKeys.ANNUAL
+            ? t("payment_page.plans.annual.date")
+            : null,
         bullets,
         text: t(`payment_page.plans.${planKey}.text`, {
           formattedPrice: price,
@@ -94,3 +90,10 @@ export const useGetPlans = (products) => {
 
   return { plans };
 };
+
+const createBulletPoint = (useCheckIcon: boolean, bulletText: string) => ({
+  imgSrc: useCheckIcon ? check : cross,
+  bullText: (
+    <span className={!useCheckIcon ? "text-[#878787]" : ""}>{bulletText}</span>
+  ),
+});

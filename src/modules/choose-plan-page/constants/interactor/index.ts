@@ -12,3 +12,6 @@ export const imagesFormat = [
     InternalFileType.JPG,
     InternalFileType.JPEG,
 ];
+
+export const ROUTER_QUERY_SOURCE_EDITOR = "editor";
+export const ROUTER_QUERY_SOURCE_ACCOUNT = "account";

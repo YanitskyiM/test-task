@@ -3,7 +3,7 @@ import { PrimaryButton } from "../../components/primary-button";
 import {
   InternalFileType,
   IPaymentPageInteractor,
-} from "../../types/interactor";
+} from "./types/interactor";
 import { PaymentPlanId } from "../../use-cases/get-subscription-products";
 import black_star from "./assets/black-star.svg";
 import fake_file from "./assets/fake-file.svg";

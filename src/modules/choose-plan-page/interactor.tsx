@@ -1,20 +1,24 @@
-import {
-  SELECTED_PLAN,
-  SELECTED_PLAN_VIEW,
-} from "../../constants/interactor/localStorage/analytics";
-import { useGetFiles } from "../../hooks/interactor/useGetFiles";
-import { useGetPlans } from "../../hooks/interactor/useGetPlans";
-import { useLoadImageCover } from "../../hooks/interactor/useLoadImageCover";
-import { useLoadPDFCover } from "../../hooks/interactor/useLoadPDFCover";
 import { useRemoteConfig } from "../../providers/remote-config-provider";
 import { useUser } from "../../providers/user-provider";
 import { API } from "../../services/api";
-import { IPaymentPageInteractor } from "../../types/interactor";
-import { PAGE_LINKS } from "../../types/router";
 import {
   PaymentPlanId,
   useGetSubscriptionProducts,
 } from "../../use-cases/get-subscription-products";
+import {
+  ROUTER_QUERY_SOURCE_ACCOUNT,
+  ROUTER_QUERY_SOURCE_EDITOR,
+} from "./constants/interactor";
+import {
+  SELECTED_PLAN,
+  SELECTED_PLAN_VIEW,
+} from "./constants/interactor/localStorage/analytics";
+import { useGetFiles } from "./hooks/useGetFiles";
+import { useGetPlans } from "./hooks/useGetPlans";
+import { useLoadImageCover } from "./hooks/useLoadImageCover";
+import { useLoadPDFCover } from "./hooks/useLoadPDFCover";
+import { IPaymentPageInteractor } from "./types/interactor";
+import { PAGE_LINKS } from "./types/router";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -59,6 +63,16 @@ export const usePaymentPageInteractor = (): IPaymentPageInteractor => {
   };
 
   React.useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        if (router.query?.token) {
+          await API.auth.byEmailToken(router.query.token as string);
+        }
+      } catch (error) {
+        throw new Error("Error fetching token:", error);
+      }
+    };
+
     if (user?.subscription !== null) {
       router.push(PAGE_LINKS.DASHBOARD);
       return;
@@ -69,7 +83,7 @@ export const usePaymentPageInteractor = (): IPaymentPageInteractor => {
     }
 
     if (router.query?.token) {
-      API.auth.byEmailToken(router.query.token as string);
+      fetchToken();
     }
   }, [user?.subscription, user?.email, router.query?.token]);
 
@@ -103,8 +117,8 @@ export const usePaymentPageInteractor = (): IPaymentPageInteractor => {
     fileType: file ? file.internal_type : null,
     fileLink,
     isEditorFlow:
-      (router.query?.source === "editor" ||
-        router.query?.source === "account") &&
+      (router.query?.source === ROUTER_QUERY_SOURCE_EDITOR ||
+        router.query?.source === ROUTER_QUERY_SOURCE_ACCOUNT) &&
       router.query.convertedFrom === undefined,
     isSecondEmail: router.query?.fromEmail === "true",
     isThirdEmail: router.query?.fromEmail === "true",

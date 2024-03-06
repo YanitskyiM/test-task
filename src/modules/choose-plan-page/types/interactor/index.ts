@@ -1,4 +1,11 @@
-import {PaymentPlanId} from "../../use-cases/get-subscription-products";
+import {PaymentPlanId} from "../../../../use-cases/get-subscription-products";
+
+
+export enum PlanKeys{
+    MONTHLY = "monthly",
+    MONTHLY_FULL = "monthly_full",
+    ANNUAL = "annual"
+}
 
 export enum InternalFileType {
     DOC = "DOC",

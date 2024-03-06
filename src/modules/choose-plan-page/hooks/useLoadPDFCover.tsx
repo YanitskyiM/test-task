@@ -1,8 +1,11 @@
-import { ApiFile } from "../../services/api/types";
-import { generatePDFCover } from "../../use-cases/generate-pdf-cover";
+import { ApiFile } from "../../../services/api/types";
+import { generatePDFCover } from "../../../use-cases/generate-pdf-cover";
+import { getFileUrl } from "../services/getFileUrl";
 import { NextRouter } from "next/router";
 import { useEffect, useState } from "react";
-import {getFileUrl} from "../../utils/interactor/getFileUrl";
+
+
+const PDF_COVER_WIDTH = 640;
 
 export const useLoadPDFCover = (router: NextRouter, file: ApiFile) => {
   const [imagePDF, setImagePDF] = useState<Blob | null>(null);
@@ -20,7 +23,7 @@ export const useLoadPDFCover = (router: NextRouter, file: ApiFile) => {
 
       const pdfCover = await generatePDFCover({
         pdfFileUrl: fileUrl,
-        width: 640,
+        width: PDF_COVER_WIDTH,
       });
       setImagePDF(pdfCover);
     } finally {
